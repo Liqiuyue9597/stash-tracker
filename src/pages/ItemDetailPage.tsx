@@ -6,12 +6,21 @@ import { useImageUpload } from '../hooks/useImageUpload'
 export default function ItemDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { getItem, deleteItem } = useItems()
+  const { getItem, deleteItem, loading } = useItems()
   const { deleteImage } = useImageUpload()
   const [showConfirm, setShowConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
   const item = id ? getItem(id) : undefined
+
+  // loading 期间显示 spinner，避免因 items 尚未加载而闪烁"物品不存在"
+  if (loading && !item) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-400 text-sm">加载中...</p>
+      </div>
+    )
+  }
 
   if (!item) {
     return (

@@ -9,9 +9,9 @@ export default function ItemCard({ item }: Props) {
   const navigate = useNavigate()
 
   return (
-    <div
+    <button
       onClick={() => navigate(`/items/${item.id}`)}
-      className="bg-white rounded-xl overflow-hidden shadow-sm active:scale-95 transition-transform cursor-pointer"
+      className="bg-white rounded-xl overflow-hidden shadow-sm active:scale-95 transition-transform w-full text-left"
     >
       <div className="aspect-square bg-gray-100 flex items-center justify-center">
         {item.image_url ? (
@@ -31,6 +31,6 @@ export default function ItemCard({ item }: Props) {
         <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
         <p className="text-xs text-gray-400 mt-0.5">数量：{item.quantity}</p>
       </div>
-    </div>
+    </button>
   )
 }

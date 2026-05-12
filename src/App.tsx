@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
+import { ItemsProvider } from './contexts/ItemsContext'
 import LoginPage from './pages/LoginPage'
 import BottomNav from './components/BottomNav'
 import InventoryPage from './pages/InventoryPage'
@@ -9,17 +10,19 @@ import ItemFormPage from './pages/ItemFormPage'
 
 function AuthenticatedApp() {
   return (
-    <div className="min-h-screen bg-gray-50 pb-16">
-      <Routes>
-        <Route path="/" element={<Navigate to="/inventory" replace />} />
-        <Route path="/inventory" element={<InventoryPage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/items/new" element={<ItemFormPage />} />
-        <Route path="/items/:id" element={<ItemDetailPage />} />
-        <Route path="/items/:id/edit" element={<ItemFormPage />} />
-      </Routes>
-      <BottomNav />
-    </div>
+    <ItemsProvider>
+      <div className="min-h-screen bg-gray-50 pb-16">
+        <Routes>
+          <Route path="/" element={<Navigate to="/inventory" replace />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/items/new" element={<ItemFormPage />} />
+          <Route path="/items/:id" element={<ItemDetailPage />} />
+          <Route path="/items/:id/edit" element={<ItemFormPage />} />
+        </Routes>
+        <BottomNav />
+      </div>
+    </ItemsProvider>
   )
 }
 
