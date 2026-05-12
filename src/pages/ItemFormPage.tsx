@@ -17,6 +17,8 @@ export default function ItemFormPage() {
 
   const existing = id ? getItem(id) : undefined
   const prefill = location.state as { barcode?: string; name?: string; category?: string } | null
+  // 扫码成功但数据库没有该商品信息时给用户提示
+  const scanHadNoInfo = !!(prefill?.barcode && !prefill?.name)
 
   const [name, setName] = useState(existing?.name ?? prefill?.name ?? '')
   const [category, setCategory] = useState(existing?.category ?? prefill?.category ?? '')
@@ -89,6 +91,13 @@ export default function ItemFormPage() {
       <form onSubmit={handleSubmit} className="p-4 space-y-4">
         <ImagePicker value={imageFile} previewUrl={previewUrl} onChange={handleImageChange} />
 
+        {/* 扫到条形码但未找到商品信息时提示用户手动填写 */}
+        {scanHadNoInfo && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-3 py-2">
+            <p className="text-xs text-yellow-700">已识别条形码 <span className="font-mono">{prefill?.barcode}</span>，未找到商品信息，请手动填写名称</p>
+          </div>
+        )}
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">名称 *</label>
           <input
@@ -97,6 +106,7 @@ export default function ItemFormPage() {
             onChange={e => setName(e.target.value)}
             className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="物品名称"
+            autoFocus={scanHadNoInfo}
           />
         </div>
 

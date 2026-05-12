@@ -62,8 +62,37 @@ async function lookupUPCItemDB(barcode: string): Promise<BarcodeResult | null> {
   }
 }
 
+// Open Barcode（覆盖中国国产商品 690-699 开头）
+async function lookupOpenBarcode(barcode: string): Promise<BarcodeResult | null> {
+  try {
+    const res = await fetch(
+      `https://openbarcode.org/api/v1/product/${barcode}`,
+      { signal: AbortSignal.timeout(5000) }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    const name = data.name || data.product_name
+    if (!name) return null
+    return { name, category: null }
+  } catch {
+    return null
+  }
+}
+
 export async function lookupBarcode(barcode: string): Promise<BarcodeResult | null> {
-  const result = await lookupOpenFoodFacts(barcode)
-  if (result) return result
+  // 中国商品条形码（690-699 开头）优先走 OpenFoodFacts + OpenBarcode
+  // 其他条形码走 UPCItemDB
+  const isChinese = /^69\d/.test(barcode)
+
+  if (isChinese) {
+    const r1 = await lookupOpenFoodFacts(barcode)
+    if (r1) return r1
+    const r2 = await lookupOpenBarcode(barcode)
+    if (r2) return r2
+    return null
+  }
+
+  const r1 = await lookupOpenFoodFacts(barcode)
+  if (r1) return r1
   return lookupUPCItemDB(barcode)
 }
