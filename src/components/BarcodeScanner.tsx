@@ -36,7 +36,7 @@ export default function BarcodeScanner({ onResult, onCancel }: Props) {
       {
         facingMode: 'environment',
         // iOS 需要持续对焦才能稳定识别条形码
-        advanced: [{ focusMode: 'continuous' }] as MediaTrackConstraintSet[],
+        advanced: [{ focusMode: 'continuous' }] as unknown as MediaTrackConstraintSet[],
       },
       { fps: 10, qrbox: { width: 280, height: 120 } },
       async (decodedText) => {
