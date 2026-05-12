@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* iOS 在 input focus 时如果 font-size < 16px 会自动缩放页面。
+   强制所有表单元素 font-size ≥ 16px 来禁止该行为。 */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
